@@ -28,9 +28,9 @@ function gc(b) {
   if (['ayam','telur','daging','ikan','udang','sapi','kambing'].some(k => n.includes(k))) return 'protein';
   if (['bawang','saos','saus','kecap','minyak','gula','garam','knorr','ajinomoto',
        'tepung','mayonaise','margarin','keju','kunyit','ketumbar','cabe','cabai',
-       'bombay'].some(k => n.includes(k))) return 'bumbu';
+       'bombay','saos tiram','saos inggris','saos teriyaki','ketumbar'].some(k => n.includes(k))) return 'bumbu';
   if (['sawi','wortel','kubis','selada','jagung','timun','bayam',
-       'kangkung','buncis','terong'].some(k => n.includes(k))) return 'sayur';
+       'kangkung','buncis','terong','kubis'].some(k => n.includes(k))) return 'sayur';
   if (['jeruk','pisang','apel','mangga','pepaya','nanas'].some(k => n.includes(k))) return 'buah';
   return 'lain';
 }
@@ -41,7 +41,6 @@ let CK = {};
 let hist = [];
 let curTab = 'input';
 
-// Load dari localStorage kalau ada
 function loadState() {
   try {
     const saved = localStorage.getItem('kok_state');
@@ -56,63 +55,82 @@ function loadState() {
 }
 
 function saveState() {
-  try {
-    localStorage.setItem('kok_state', JSON.stringify({ WD, CK, hist, wo }));
-  } catch(e) {}
+  try { localStorage.setItem('kok_state', JSON.stringify({ WD, CK, hist, wo })); } catch(e) {}
 }
 
-// ─── DATA DEFAULT ───────────────────────────────────────────
+// ─── DATA LENGKAP (Juni 2026) ───────────────────────────────
 let WD = { days: [
-  { n: "Selasa, 02 Juni", od: "Senin, 01 Juni", os: "Senin 01/06", items: [
-    { b: "Beras", q: 150, s: "kg" }, { b: "Ayam Dada Fillet", q: 170, s: "kg" },
-    { b: "Tempe", q: 75, s: "kg" }, { b: "Susu UHT", q: 5, s: "L" },
-    { b: "Jeruk Jawara", q: 240, s: "kg" }, { b: "Sawi Putih", q: 70, s: "kg" },
-    { b: "Wortel", q: 20, s: "kg" }, { b: "Bawang Putih", q: 2, s: "kg" }, { b: "Garam", q: 3, s: "kg" }
+  { n: "Selasa, 02 Juni 2026", od: "Senin, 01 Juni 2026", os: "Senin 01/06", items: [
+    {b:"Beras",q:150,s:"kg"},{b:"Ayam Dada Fillet",q:170,s:"kg"},
+    {b:"Tepung Cakra",q:25,s:"kg"},{b:"Knorr",q:2,s:"kg"},
+    {b:"Ajinomoto",q:1,s:"kg"},{b:"Tepung Panir",q:15,s:"kg"},
+    {b:"Susu UHT",q:5,s:"L"},{b:"Keju Melted",q:3,s:"kg"},
+    {b:"Margarin Simas",q:3,s:"kg"},{b:"Gula Pasir",q:5,s:"kg"},
+    {b:"Tempe",q:75,s:"kg"},{b:"Garam",q:3,s:"kg"},
+    {b:"Sawi Putih",q:70,s:"kg"},{b:"Wortel",q:20,s:"kg"},
+    {b:"Bawang Putih",q:2,s:"kg"},{b:"Bawang Merah",q:2,s:"kg"},
+    {b:"Bawang Bombay",q:1,s:"kg"},{b:"Jeruk Jawara",q:240,s:"kg"},
+    {b:"Minyak Wijen",q:2,s:"btl"},{b:"Saos Tiram",q:2,s:"btl"},
+    {b:"Kecap Manis Dara",q:1,s:"drigen"},{b:"Saos Sambal",q:1,s:"drigen"},
+    {b:"Saos Tomat",q:1,s:"drigen"}
   ]},
-  { n: "Rabu, 03 Juni", od: "Selasa, 02 Juni", os: "Selasa 02/06", items: [
-    { b: "Beras", q: 150, s: "kg" }, { b: "Telur", q: 165, s: "kg" },
-    { b: "Tahu", q: 3000, s: "pcs" }, { b: "Kubis", q: 45, s: "kg" },
-    { b: "Wortel", q: 40, s: "kg" }, { b: "Pisang Berlin", q: 4800, s: "pcs" },
-    { b: "Knorr", q: 3, s: "kg" }, { b: "Minyak Goreng", q: 180, s: "L" }
+  { n: "Rabu, 03 Juni 2026", od: "Selasa, 02 Juni 2026", os: "Selasa 02/06", items: [
+    {b:"Beras",q:150,s:"kg"},{b:"Telur",q:165,s:"kg"},
+    {b:"Tahu",q:3000,s:"pcs"},{b:"Tepung Panir",q:25,s:"kg"},
+    {b:"Tepung Terigu Segitiga (L)",q:25,s:"kg"},{b:"Tepung Maizena",q:5,s:"kg"},
+    {b:"Kubis",q:45,s:"kg"},{b:"Wortel",q:40,s:"kg"},
+    {b:"Selada",q:13,s:"kg"},{b:"Knorr",q:3,s:"kg"},
+    {b:"Ajinomoto",q:2,s:"kg"},{b:"Garam",q:5,s:"kg"},
+    {b:"Gula Pasir",q:2,s:"kg"},{b:"Jagung Pipil",q:15,s:"kg"},
+    {b:"Pisang Berlin",q:4800,s:"pcs"},{b:"Minyak Goreng",q:180,s:"L"},
+    {b:"Tepung Cakra",q:50,s:"kg"},{b:"Saos Inggris",q:2,s:"btl"},
+    {b:"Saos Teriyaki",q:3,s:"btl"},{b:"Bawang Bombay",q:2,s:"kg"},
+    {b:"Kunyit Bubuk",q:24,s:"pcs"}
   ]},
-  { n: "Kamis, 04 Juni", od: "Rabu, 03 Juni", os: "Rabu 03/06", items: [
-    { b: "Beras", q: 150, s: "kg" }, { b: "Ayam Paha (Potong 10)", q: 240, s: "kg" },
-    { b: "Tempe", q: 90, s: "kg" }, { b: "Apel Manalagi", q: 175, s: "kg" },
-    { b: "Selada", q: 10, s: "kg" }, { b: "Timun", q: 35, s: "kg" },
-    { b: "Garam", q: 3, s: "kg" }, { b: "Cabe Merah", q: 8, s: "kg" }
+  { n: "Kamis, 04 Juni 2026", od: "Rabu, 03 Juni 2026", os: "Rabu 03/06", items: [
+    {b:"Beras",q:150,s:"kg"},{b:"Timun",q:35,s:"kg"},
+    {b:"Selada",q:10,s:"kg"},{b:"Saos Inggris",q:1,s:"btl"},
+    {b:"Ayam Paha (Potong 10)",q:240,s:"kg"},{b:"Saos Tomat",q:2,s:"drigen"},
+    {b:"Kecap Manis Dara",q:1,s:"drigen"},{b:"Gula Pasir",q:5,s:"kg"},
+    {b:"Tempe",q:90,s:"kg"},{b:"Ajinomoto",q:2,s:"kg"},
+    {b:"Garam",q:3,s:"kg"},{b:"Knorr",q:2,s:"kg"},
+    {b:"Cabe Rawit",q:3,s:"kg"},{b:"Bawang Merah",q:2,s:"kg"},
+    {b:"Bawang Putih",q:2,s:"kg"},{b:"Minyak Wijen",q:1,s:"btl"},
+    {b:"Ketumbar",q:1,s:"renteng"},{b:"Apel Manalagi",q:175,s:"kg"},
+    {b:"Cabe Merah",q:8,s:"kg"}
   ]},
-  { n: "Jum'at, 05 Juni", od: "Kamis, 04 Juni", os: "Kamis 04/06", items: [
-    { b: "French Fries", q: 150, s: "kg" }, { b: "Ayam Giling", q: 80, s: "kg" },
-    { b: "Tahu", q: 2400, s: "pcs" }, { b: "Jagung Kupas", q: 100, s: "kg" },
-    { b: "Jeruk Santang", q: 180, s: "kg" }, { b: "Wortel", q: 10, s: "kg" },
-    { b: "Saos Tomat", q: 3, s: "drigen" }
+  { n: "Jum'at, 05 Juni 2026", od: "Kamis, 04 Juni 2026", os: "Kamis 04/06", items: [
+    {b:"French Fries",q:150,s:"kg"},{b:"Ayam Giling",q:80,s:"kg"},
+    {b:"Tepung Terigu Segitiga (L)",q:10,s:"kg"},{b:"Saos Tomat",q:3,s:"drigen"},
+    {b:"Mayonaise",q:15,s:"kg"},{b:"Saos Sambal",q:1,s:"drigen"},
+    {b:"Jagung Kupas",q:100,s:"kg"},{b:"Gula Putih",q:2,s:"kg"},
+    {b:"Wortel",q:10,s:"kg"},{b:"Bawang Putih",q:2,s:"kg"},
+    {b:"Bawang Merah",q:2,s:"kg"},{b:"Bawang Bombay",q:1,s:"kg"},
+    {b:"Tahu",q:2400,s:"pcs"},{b:"Kulit Pangsit (Isi 40)",q:35,s:"kg"},
+    {b:"Tepung Maizena",q:5,s:"kg"},{b:"Jeruk Santang",q:180,s:"kg"},
+    {b:"Susu UHT",q:null,s:null}
   ]},
 ]};
 
 // ─── HELPERS ───────────────────────────────────────────────
 const iid = (di, ii) => `${di}_${ii}`;
 
-function toast(msg) {
+function toast(msg, dur=2200) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
+  setTimeout(() => el.classList.remove('show'), dur);
 }
 
 function toggle(di, ii) {
-  const id = iid(di, ii);
-  CK[id] = !CK[id];
-  saveState();
-  refreshAll();
-  updateNavDots();
+  CK[iid(di,ii)] = !CK[iid(di,ii)];
+  saveState(); refreshAll(); updateNavDots();
 }
 
 function toggleGroup(ids) {
   const allCk = ids.every(id => CK[id]);
   ids.forEach(id => { CK[id] = !allCk; });
-  saveState();
-  refreshAll();
-  updateNavDots();
+  saveState(); refreshAll(); updateNavDots();
 }
 
 function refreshAll() {
@@ -126,52 +144,168 @@ function refreshAll() {
 function updateProgress() {
   let tot = 0, dn = 0;
   WD.days.forEach((day, di) => day.items.forEach((_, ii) => {
-    tot++; if (CK[iid(di, ii)]) dn++;
+    tot++; if (CK[iid(di,ii)]) dn++;
   }));
-  const pct = tot > 0 ? Math.round(dn / tot * 100) : 0;
-  const pf = document.getElementById('cl-prog');
-  const ll = document.getElementById('cl-lbl');
+  const pct = tot > 0 ? Math.round(dn/tot*100) : 0;
+  const pf   = document.getElementById('cl-prog');
+  const ll   = document.getElementById('cl-lbl');
   const ring = document.getElementById('ring-fill');
-  const rl = document.getElementById('ring-pct');
-  if (pf) pf.style.width = pct + '%';
-  if (ll) ll.textContent = `${dn} / ${tot}`;
-  if (ring) ring.style.strokeDashoffset = 87.96 * (1 - pct / 100);
-  if (rl) rl.textContent = pct + '%';
+  const rl   = document.getElementById('ring-pct');
+  if (pf)   pf.style.width = pct + '%';
+  if (ll)   ll.textContent = `${dn} / ${tot}`;
+  if (ring) ring.style.strokeDashoffset = 87.96 * (1 - pct/100);
+  if (rl)   rl.textContent = pct + '%';
 }
 
 function updateNavDots() {
-  let tot = 0, dn = 0;
-  WD.days.forEach((day, di) => day.items.forEach((_, ii) => {
-    tot++; if (CK[iid(di, ii)]) dn++;
-  }));
+  let dn = 0;
+  WD.days.forEach((day, di) => day.items.forEach((_, ii) => { if (CK[iid(di,ii)]) dn++; }));
   const el = document.getElementById('badge-cl');
   if (el) el.className = 'ntab-badge' + (dn > 0 ? ' show' : '');
 }
 
 function getWeekLabel() {
-  return `${2 + wo * 7}–${6 + wo * 7} Juni 2026`;
+  // Ambil nama hari pertama & terakhir dari WD
+  if (WD.days && WD.days.length) {
+    const first = WD.days[0].n;
+    const last  = WD.days[WD.days.length-1].n;
+    return `${first} – ${last}`;
+  }
+  return `Minggu ${wo+1}`;
+}
+
+function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ─── IMPORT EXCEL ──────────────────────────────────────────
+// Kolom yang diharapkan di sheet "Menu Harian":
+//   A=BAHAN, B=Kebutuhan, C=SATUAN, D=HARGA  (tanpa kolom menu/keterangan)
+// Header hari: baris yang merge/bold, berisi nama hari
+// Kita detect baris judul hari dari pattern teks
+
+function triggerImport() {
+  document.getElementById('xl-input').click();
+}
+
+async function handleImport(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  toast('⏳ Membaca file Excel...');
+
+  try {
+    const data = await file.arrayBuffer();
+    const wb   = XLSX.read(data, { type: 'array' });
+
+    // Coba sheet "Menu Harian" dulu, fallback ke sheet pertama
+    const sheetName = wb.SheetNames.includes('Menu Harian')
+      ? 'Menu Harian'
+      : wb.SheetNames[0];
+    const ws   = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+    // Parse: deteksi baris judul hari (kolom A berisi nama hari / tanggal, kolom lain kosong)
+    // Baris data: kolom A=bahan, B=qty, C=satuan
+    const DAY_PATTERN = /(senin|selasa|rabu|kamis|jum.?at|sabtu|ahad|minggu)/i;
+    const SKIP_PATTERN = /(total|pagu|sisa|bahan|kebutuhan|satuan|keterangan|harga)/i;
+
+    const newDays = [];
+    let curDay = null;
+
+    // Mapping hari → order H-1
+    const ORDER_MAP = {
+      'senin':'Ahad',    'selasa':'Senin', 'rabu':'Selasa',
+      'kamis':'Rabu',    'jumat':'Kamis',  "jum'at":'Kamis',
+      'sabtu':'Jumat',
+    };
+
+    rows.forEach(row => {
+      const a = String(row[0] || '').trim();
+      const b = row[1];
+      const c = String(row[2] || '').trim();
+
+      // Baris judul hari?
+      if (DAY_PATTERN.test(a) && !b && !c) {
+        curDay = { n: a, od: '', os: '', items: [] };
+        // Tentukan order day
+        const match = a.match(DAY_PATTERN);
+        if (match) {
+          const hari = match[1].toLowerCase().replace("'", "'");
+          const orderHari = ORDER_MAP[hari] || '';
+          // Ambil tanggal dari string — misal "Selasa, 02 Juni 2026"
+          const tgl = a.match(/\d{1,2}\s+\w+\s+\d{4}/);
+          if (tgl) {
+            // Hitung H-1
+            const d = new Date(tgl[0].replace(/(\d+)\s+(\w+)\s+(\d+)/, (_, dd, mm, yy) => {
+              const months = {januari:0,februari:1,maret:2,april:3,mei:4,juni:5,
+                              juli:6,agustus:7,september:8,oktober:9,november:10,desember:11};
+              return `${yy}-${(months[mm.toLowerCase()]||0)+1}-${dd}`;
+            }));
+            d.setDate(d.getDate() - 1);
+            const nama = ['Ahad','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'][d.getDay()];
+            const dd = String(d.getDate()).padStart(2,'0');
+            const mm = String(d.getMonth()+1).padStart(2,'0');
+            curDay.od = `${nama}, ${dd} ${a.match(/\w+ \d{4}/)?.[0] || ''}`.trim();
+            curDay.os = `${nama} ${dd}/${mm}`;
+          }
+        }
+        newDays.push(curDay);
+        return;
+      }
+
+      // Skip baris kosong / header / total
+      if (!a || SKIP_PATTERN.test(a) || !curDay) return;
+
+      // Baris data bahan
+      const qty = parseFloat(String(b).replace(/[^0-9.]/g,'')) || null;
+      if (a) {
+        curDay.items.push({ b: a, q: qty, s: c || 'kg' });
+      }
+    });
+
+    if (!newDays.length || newDays.every(d => !d.items.length)) {
+      toast('⚠️ Format tidak terbaca. Pastikan sheet "Menu Harian" & kolom A=Bahan, B=Qty, C=Satuan', 4000);
+      evt.target.value = '';
+      return;
+    }
+
+    // Simpan minggu lama ke histori dulu
+    hist.unshift({
+      label: getWeekLabel(),
+      saved: new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric'}),
+      data:  JSON.parse(JSON.stringify(WD))
+    });
+
+    WD = { days: newDays.filter(d => d.items.length > 0) };
+    CK = {};
+    saveState();
+    renderInput();
+    updateNavDots();
+    toast(`✓ ${WD.days.length} hari berhasil diimport dari "${sheetName}"!`, 3000);
+  } catch(err) {
+    console.error(err);
+    toast('⚠️ Gagal membaca file. Pastikan format .xlsx', 3500);
+  }
+  evt.target.value = '';
 }
 
 // ─── INPUT ─────────────────────────────────────────────────
 function renderInput(full = true) {
-  if (full) {
-    document.getElementById('week-label').textContent = getWeekLabel();
-  }
+  if (full) document.getElementById('week-label').textContent = getWeekLabel();
+
   const c = document.getElementById('days-c');
   c.innerHTML = '';
   WD.days.forEach((day, di) => {
-    const doneN = day.items.filter((_, ii) => CK[iid(di, ii)]).length;
+    const doneN   = day.items.filter((_, ii) => CK[iid(di,ii)]).length;
     const isAllDone = doneN === day.items.length && day.items.length > 0;
     const el = document.createElement('div');
     el.className = 'day-block';
     el.innerHTML = `
       <div class="day-hdr" onclick="togDay(${di})">
         <div class="day-hdr-l">
-          ${day.n}
-          <span class="chip ${isAllDone ? 'green' : ''}" id="bdg-${di}">${doneN}/${day.items.length}</span>
+          ${escH(day.n)}
+          <span class="chip ${isAllDone?'green':''}" id="bdg-${di}">${doneN}/${day.items.length}</span>
         </div>
         <div class="day-hdr-r">
-          <span class="order-tag">order: ${day.os}</span>
+          <span class="order-tag">order: ${escH(day.os)}</span>
           <span class="chev" id="chv-${di}">▾</span>
         </div>
       </div>
@@ -189,7 +323,7 @@ function renderInput(full = true) {
 }
 
 function togDay(di) {
-  const b = document.getElementById(`db-${di}`);
+  const b  = document.getElementById(`db-${di}`);
   const ch = document.getElementById(`chv-${di}`);
   const open = b.style.display !== 'none';
   b.style.display = open ? 'none' : 'block';
@@ -201,21 +335,21 @@ function rItems(di) {
   if (!c) return;
   c.innerHTML = '';
   WD.days[di].items.forEach((item, ii) => {
-    const id = iid(di, ii);
-    const ck = CK[id];
+    const id  = iid(di, ii);
+    const ck  = CK[id];
     const cfg = CC[gc(item.b)];
     const row = document.createElement('div');
     row.className = 'item-row' + (ck ? ' is-ck' : '');
     row.innerHTML = `
-      <div class="chk ${ck ? 'on' : ''}" onclick="toggle(${di},${ii})" title="Tandai diorder">
+      <div class="chk ${ck?'on':''}" onclick="toggle(${di},${ii})" title="Tandai diorder">
         ${ck ? '✓' : ''}
       </div>
-      <input type="text" value="${escH(item.b)}" placeholder="Nama bahan"
-        oninput="upIt(${di},${ii},'b',this.value)">
-      <input type="number" value="${item.q || ''}" placeholder="Qty" min="0"
-        oninput="upIt(${di},${ii},'q',+this.value)">
-      <input type="text" value="${escH(item.s)}" placeholder="kg"
-        oninput="upIt(${di},${ii},'s',this.value)">
+      <input type="text"   value="${escH(item.b)}" placeholder="Nama bahan"
+             oninput="upIt(${di},${ii},'b',this.value)">
+      <input type="number" value="${item.q||''}"   placeholder="Qty" min="0"
+             oninput="upIt(${di},${ii},'q',+this.value)">
+      <input type="text"   value="${escH(item.s)}" placeholder="kg"
+             oninput="upIt(${di},${ii},'s',this.value)">
       <div class="cat-tag" id="ct-${di}-${ii}">
         <div class="cat-dot" style="background:${cfg.c}"></div>
         <span>${cfg.l}</span>
@@ -225,13 +359,11 @@ function rItems(di) {
   });
 }
 
-function escH(s) { return (s || '').replace(/"/g, '&quot;'); }
-
 function upIt(di, ii, f, v) {
   WD.days[di].items[ii][f] = v;
   if (f === 'b') {
     const cfg = CC[gc(v)];
-    const el = document.getElementById(`ct-${di}-${ii}`);
+    const el  = document.getElementById(`ct-${di}-${ii}`);
     if (el) el.innerHTML = `<div class="cat-dot" style="background:${cfg.c}"></div><span>${cfg.l}</span>`;
   }
   saveState();
@@ -239,34 +371,29 @@ function upIt(di, ii, f, v) {
 
 function addIt(di) {
   WD.days[di].items.push({ b: '', q: null, s: 'kg' });
-  saveState();
-  renderInput(false);
+  saveState(); renderInput(false);
 }
 
 function rmIt(di, ii) {
   WD.days[di].items.splice(ii, 1);
   delete CK[iid(di, ii)];
-  saveState();
-  renderInput(false);
+  saveState(); renderInput(false);
 }
 
 function prevW() { wo--; saveState(); renderInput(); }
 function nextW() { wo++; saveState(); renderInput(); }
 
-function genExcel() {
-  toast('Fitur generate Excel tersedia setelah deploy penuh.');
-}
+function genExcel() { toast('Upload Excel untuk import data minggu baru ↑'); }
 
 function saveW() {
   hist.unshift({
     label: getWeekLabel(),
-    saved: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
+    saved: new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric'}),
     data:  JSON.parse(JSON.stringify(WD))
   });
-  saveState();
-  rHist();
-  toast('✓ Minggu ' + getWeekLabel() + ' tersimpan!');
-  const btn = document.getElementById('btn-sv');
+  saveState(); rHist();
+  toast('✓ Tersimpan ke histori!');
+  const btn  = document.getElementById('btn-sv');
   const orig = btn.innerHTML;
   btn.innerHTML = '✓ Tersimpan!';
   setTimeout(() => { btn.innerHTML = orig; }, 1800);
@@ -300,37 +427,33 @@ function renderRekap() {
 
   multi.sort((a, b) => CO.indexOf(a.cat) - CO.indexOf(b.cat) || a.d.localeCompare(b.d));
   let curC = null;
-
   multi.forEach(item => {
     if (item.cat !== curC) {
       curC = item.cat;
       const cfg = CC[curC];
-      const tr = document.createElement('tr');
+      const tr  = document.createElement('tr');
       tr.className = 'cat-row';
       tr.innerHTML = `<td colspan="8"><span style="display:inline-flex;align-items:center;gap:5px">
         <span style="width:6px;height:6px;border-radius:50%;background:${cfg.c};display:inline-block"></span>
         ${cfg.l}</span></td>`;
       tb.appendChild(tr);
     }
-
     const allCk = item.ids.every(id => CK[id]);
-    const tr = document.createElement('tr');
+    const tr    = document.createElement('tr');
     if (allCk) tr.className = 'ck-row';
-
     let tot = 0;
     const cells = WD.days.map(d => {
       const v = item.pd[d.n];
       if (v) { tot += v; return `<td class="nv">${v.toLocaleString()}</td>`; }
       return `<td class="nd">—</td>`;
     }).join('');
-
-    const idsJson = JSON.stringify(item.ids).replace(/"/g, "'");
+    const idsStr = JSON.stringify(item.ids).replace(/"/g,"'");
     tr.innerHTML = `
       <td style="text-align:center">
-        <div class="chk-sm ${allCk ? 'on' : ''}" onclick="toggleGroup(${idsJson})">${allCk ? '✓' : ''}</div>
+        <div class="chk-sm ${allCk?'on':''}" onclick="toggleGroup(${idsStr})">${allCk?'✓':''}</div>
       </td>
-      <td style="font-weight:500">${item.d}</td>
-      <td style="text-align:center;color:var(--text3);font-size:10px">${item.s || ''}</td>
+      <td style="font-weight:500">${escH(item.d)}</td>
+      <td style="text-align:center;color:var(--text3);font-size:10px">${escH(item.s||'')}</td>
       ${cells}
       <td class="nv" style="font-weight:600">${tot.toLocaleString()}</td>`;
     tb.appendChild(tr);
@@ -348,8 +471,8 @@ function buildOG() {
       const cat = gc(item.b);
       if (!G[k].cats[cat]) G[k].cats[cat] = [];
       const ex = G[k].cats[cat].find(i => i.b.toLowerCase() === item.b.toLowerCase());
-      if (ex) { if (item.q) ex.q = (ex.q || 0) + item.q; ex.ids.push(iid(di, ii)); }
-      else G[k].cats[cat].push({ ...item, ids: [iid(di, ii)] });
+      if (ex) { if (item.q) ex.q = (ex.q||0) + item.q; ex.ids.push(iid(di,ii)); }
+      else G[k].cats[cat].push({ ...item, ids: [iid(di,ii)] });
     });
   });
   return { G, seq };
@@ -360,17 +483,15 @@ function renderOrderH() {
   const { G, seq } = buildOG();
   const cont = document.getElementById('order-h-c');
   cont.innerHTML = '';
-
   seq.forEach(key => {
     const grp = G[key];
     const block = document.createElement('div');
     block.className = 'msg-block';
-    const sortedCats = Object.keys(grp.cats).sort((a, b) => CO.indexOf(a) - CO.indexOf(b));
+    const sortedCats = Object.keys(grp.cats).sort((a,b) => CO.indexOf(a) - CO.indexOf(b));
     let lines = [grp.short, ''];
     let bHtml = '';
-
     sortedCats.forEach(cat => {
-      const cfg = CC[cat];
+      const cfg   = CC[cat];
       const items = grp.cats[cat];
       lines.push(`— ${cfg.l} —`);
       bHtml += `<div class="msg-cat">
@@ -379,27 +500,25 @@ function renderOrderH() {
           ${cfg.l}
         </div>`;
       items.forEach(item => {
-        const ck = item.ids.every(id => CK[id]);
-        const line = `- ${item.b}${item.q ? ` ${item.q.toLocaleString()} ${item.s || ''}` : ''}`;
+        const ck     = item.ids.every(id => CK[id]);
+        const line   = `- ${item.b}${item.q ? ` ${item.q.toLocaleString()} ${item.s||''}` : ''}`;
         lines.push(line);
-        const idsStr = JSON.stringify(item.ids).replace(/"/g, "'");
-        bHtml += `<div class="msg-row ${ck ? 'ck' : ''}" onclick="toggleGroup(${idsStr})">
-          <div class="chk-sm ${ck ? 'on' : ''}">${ck ? '✓' : ''}</div>
+        const idsStr = JSON.stringify(item.ids).replace(/"/g,"'");
+        bHtml += `<div class="msg-row ${ck?'ck':''}" onclick="toggleGroup(${idsStr})">
+          <div class="chk-sm ${ck?'on':''}">${ck?'✓':''}</div>
           <span class="pill" style="background:${cfg.b};color:${cfg.c}">${cfg.l}</span>
-          <span>${item.b}</span>
-          <span class="q">${item.q ? item.q.toLocaleString() + ' ' + (item.s || '') : ''}</span>
+          <span>${escH(item.b)}</span>
+          <span class="q">${item.q ? item.q.toLocaleString()+' '+(item.s||'') : ''}</span>
         </div>`;
       });
       bHtml += '</div>';
     });
-
     const txt = lines.join('\n');
     const enc = encodeURIComponent(txt);
-
     block.innerHTML = `
       <div class="msg-hdr">
-        <div class="msg-hdr-l">◎ Order ${grp.label}</div>
-        <span class="msg-for">untuk ${grp.menu}</span>
+        <div class="msg-hdr-l">◎ Order ${escH(grp.label)}</div>
+        <span class="msg-for">untuk ${escH(grp.menu)}</span>
       </div>
       <div class="msg-body">
         ${bHtml}
@@ -416,7 +535,7 @@ function copyT(el, enc) {
     el.style.color = '#4ade80';
     toast('✓ Pesan berhasil dicopy!');
     setTimeout(() => { el.style.borderColor = ''; el.style.color = ''; }, 1500);
-  }).catch(() => { toast('Gagal copy, coba manual.'); });
+  }).catch(() => toast('Gagal copy, coba manual.'));
 }
 
 // ─── CHECKLIST ─────────────────────────────────────────────
@@ -424,33 +543,30 @@ function renderCL() {
   const { G, seq } = buildOG();
   const cont = document.getElementById('cl-c');
   cont.innerHTML = '';
-
   seq.forEach(key => {
     const grp = G[key];
     const block = document.createElement('div');
     block.className = 'order-day';
-    const sc = Object.keys(grp.cats).sort((a, b) => CO.indexOf(a) - CO.indexOf(b));
-    let items = [];
+    const sc    = Object.keys(grp.cats).sort((a,b) => CO.indexOf(a)-CO.indexOf(b));
+    let items   = [];
     sc.forEach(cat => grp.cats[cat].forEach(item => items.push({ ...item, cat })));
-    const dN = items.filter(item => item.ids.every(id => CK[id])).length;
-    const isAllDone = dN === items.length && items.length > 0;
-
+    const dN    = items.filter(item => item.ids.every(id => CK[id])).length;
+    const isAll = dN === items.length && items.length > 0;
     block.innerHTML = `<div class="od-title">
-      ◎ Order ${grp.label} — untuk ${grp.menu}
-      <span class="chip ${isAllDone ? 'green' : ''}" style="margin-left:auto">${dN}/${items.length}</span>
+      ◎ Order ${escH(grp.label)} — untuk ${escH(grp.menu)}
+      <span class="chip ${isAll?'green':''}" style="margin-left:auto">${dN}/${items.length}</span>
     </div>`;
-
     items.forEach(item => {
-      const ck = item.ids.every(id => CK[id]);
+      const ck  = item.ids.every(id => CK[id]);
       const cfg = CC[item.cat];
       const row = document.createElement('div');
       row.className = 'oi' + (ck ? ' ck' : '');
       row.onclick = () => { toggleGroup(item.ids); };
       row.innerHTML = `
-        <div class="chk-sm ${ck ? 'on' : ''}">${ck ? '✓' : ''}</div>
+        <div class="chk-sm ${ck?'on':''}">${ck?'✓':''}</div>
         <span class="pill" style="background:${cfg.b};color:${cfg.c}">${cfg.l}</span>
-        <span>${item.b}</span>
-        <span class="q">${item.q ? item.q.toLocaleString() + ' ' + (item.s || '') : ''}</span>`;
+        <span>${escH(item.b)}</span>
+        <span class="q">${item.q ? item.q.toLocaleString()+' '+(item.s||'') : ''}</span>`;
       block.appendChild(row);
     });
     cont.appendChild(block);
@@ -468,8 +584,8 @@ function rHist() {
     el.className = 'hist-row';
     el.innerHTML = `
       <div>
-        <div class="hist-title">Minggu ${h.label}</div>
-        <div class="hist-sub">Disimpan ${h.saved}</div>
+        <div class="hist-title">Minggu ${escH(h.label)}</div>
+        <div class="hist-sub">Disimpan ${escH(h.saved)}</div>
       </div>
       <div class="hist-actions">
         <button class="hist-btn" onclick="loadH(${i})">↖ Lihat</button>
@@ -488,18 +604,15 @@ const TABS = ['input','rekap','order-h','checklist','histori'];
 
 function go(name) {
   curTab = name;
-  TABS.forEach(t => {
-    document.getElementById(`s-${t}`).classList.remove('active');
-  });
-  document.querySelectorAll('.ntab').forEach(b => {
+  TABS.forEach(t => document.getElementById(`s-${t}`).classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach((b,i) => {
     b.classList.remove('active');
-    b.setAttribute('aria-selected', 'false');
+    b.setAttribute('aria-selected','false');
   });
   document.getElementById(`s-${name}`).classList.add('active');
   const idx = TABS.indexOf(name);
   const tabs = document.querySelectorAll('.ntab');
-  if (tabs[idx]) { tabs[idx].classList.add('active'); tabs[idx].setAttribute('aria-selected', 'true'); }
-
+  if (tabs[idx]) { tabs[idx].classList.add('active'); tabs[idx].setAttribute('aria-selected','true'); }
   if (name === 'input')     renderInput(false);
   if (name === 'rekap')     renderRekap();
   if (name === 'order-h')   renderOrderH();

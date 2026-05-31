@@ -255,3 +255,27 @@ input::placeholder { color: var(--text3); }
   .row-lbl, .item-row { grid-template-columns: 26px 1fr 60px 50px 70px 26px; gap: 3px; }
   .topbar { padding: .7rem .85rem; }
 }
+
+/* ── IMPORT BAR ── */
+.import-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-lg);
+  padding: .8rem 1rem;
+  margin-bottom: .9rem;
+  gap: 10px;
+}
+.import-info { display: flex; align-items: center; gap: 10px; }
+.import-icon { font-size: 20px; color: var(--accent); line-height: 1; }
+.import-title { font-size: 13px; font-weight: 500; }
+.import-sub   { font-size: 11px; color: var(--text3); margin-top: 1px; font-family: 'DM Mono', monospace; }
+.import-btn {
+  padding: .5rem 1rem; border-radius: var(--radius); font-size: 12px;
+  font-family: 'Outfit', sans-serif; font-weight: 500;
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  white-space: nowrap; transition: opacity .15s; flex-shrink: 0;
+}
+.import-btn:hover { opacity: .85; }

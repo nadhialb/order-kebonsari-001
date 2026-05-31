@@ -30,10 +30,6 @@
         </svg>
         <span class="ring-label" id="ring-pct">0%</span>
       </div>
-      <div class="week-nav">
-        <button class="wbtn" onclick="prevW()" aria-label="Minggu sebelumnya">‹</button>
-        <button class="wbtn" onclick="nextW()" aria-label="Minggu berikutnya">›</button>
-      </div>
     </div>
   </header>
 
@@ -48,7 +44,8 @@
       <span class="ntab-icon">✉</span><span>Pesan</span>
     </button>
     <button class="ntab" onclick="go('checklist')" role="tab">
-      <span class="ntab-icon">◎</span><span>Checklist</span><span class="ntab-badge" id="badge-cl"></span>
+      <span class="ntab-icon">◎</span><span>Checklist</span>
+      <span class="ntab-badge" id="badge-cl"></span>
     </button>
     <button class="ntab" onclick="go('histori')"   role="tab">
       <span class="ntab-icon">⏱</span><span>Histori</span>
@@ -59,13 +56,24 @@
 
     <!-- INPUT -->
     <section id="s-input" class="sec active">
+      <!-- Import bar -->
+      <div class="import-bar">
+        <div class="import-info">
+          <span class="import-icon">↑</span>
+          <div>
+            <div class="import-title">Import dari Excel</div>
+            <div class="import-sub">Upload file .xlsx — data otomatis masuk</div>
+          </div>
+        </div>
+        <button class="import-btn" onclick="triggerImport()">Pilih File</button>
+        <input type="file" id="xl-input" accept=".xlsx,.xls" style="display:none" onchange="handleImport(event)">
+      </div>
+
       <div id="days-c"></div>
+
       <div class="bottom-actions">
-        <button class="action-btn primary" onclick="genExcel()">
-          <span>↓</span> Generate Excel
-        </button>
         <button class="action-btn success" id="btn-sv" onclick="saveW()">
-          <span>◈</span> Simpan Minggu Ini
+          <span>◈</span> Simpan ke Histori
         </button>
       </div>
     </section>
@@ -126,6 +134,9 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- SheetJS untuk baca Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
