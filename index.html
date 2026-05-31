@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a2744">
+<title>Order Kebonsari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo-mark">◈</span>
+      <div>
+        <div class="logo-title">Order Kebonsari</div>
+        <div class="logo-sub" id="week-label">Memuat...</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="progress-ring-wrap" title="Progress order minggu ini">
+        <svg class="progress-ring" width="36" height="36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2.5"/>
+          <circle id="ring-fill" cx="18" cy="18" r="14" fill="none" stroke="#4ade80" stroke-width="2.5"
+            stroke-dasharray="87.96" stroke-dashoffset="87.96" stroke-linecap="round"
+            transform="rotate(-90 18 18)" style="transition:stroke-dashoffset .5s ease"/>
+        </svg>
+        <span class="ring-label" id="ring-pct">0%</span>
+      </div>
+      <div class="week-nav">
+        <button class="wbtn" onclick="prevW()" aria-label="Minggu sebelumnya">‹</button>
+        <button class="wbtn" onclick="nextW()" aria-label="Minggu berikutnya">›</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs" role="tablist">
+    <button class="ntab active" onclick="go('input')"    role="tab" aria-selected="true">
+      <span class="ntab-icon">✎</span><span>Input</span>
+    </button>
+    <button class="ntab" onclick="go('rekap')"     role="tab">
+      <span class="ntab-icon">⊞</span><span>Rekap</span>
+    </button>
+    <button class="ntab" onclick="go('order-h')"   role="tab">
+      <span class="ntab-icon">✉</span><span>Pesan</span>
+    </button>
+    <button class="ntab" onclick="go('checklist')" role="tab">
+      <span class="ntab-icon">◎</span><span>Checklist</span><span class="ntab-badge" id="badge-cl"></span>
+    </button>
+    <button class="ntab" onclick="go('histori')"   role="tab">
+      <span class="ntab-icon">⏱</span><span>Histori</span>
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- INPUT -->
+    <section id="s-input" class="sec active">
+      <div id="days-c"></div>
+      <div class="bottom-actions">
+        <button class="action-btn primary" onclick="genExcel()">
+          <span>↓</span> Generate Excel
+        </button>
+        <button class="action-btn success" id="btn-sv" onclick="saveW()">
+          <span>◈</span> Simpan Minggu Ini
+        </button>
+      </div>
+    </section>
+
+    <!-- REKAP -->
+    <section id="s-rekap" class="sec">
+      <div class="sec-head">
+        <h2 class="sec-title">Rekapitulasi Bahan</h2>
+        <span class="chip" id="rekap-c">—</span>
+      </div>
+      <div class="table-wrap">
+        <table class="rtable" id="rtable">
+          <thead>
+            <tr>
+              <th class="th-chk"></th>
+              <th class="th-bahan">Bahan</th>
+              <th>Sat.</th>
+              <th id="rh0"></th><th id="rh1"></th><th id="rh2"></th><th id="rh3"></th>
+              <th class="th-total">Total</th>
+            </tr>
+          </thead>
+          <tbody id="rekap-tb"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PESAN ORDER -->
+    <section id="s-order-h" class="sec">
+      <div class="sec-head">
+        <h2 class="sec-title">Pesan Order</h2>
+        <span class="hint-text">Klik kotak pesan untuk copy</span>
+      </div>
+      <div id="order-h-c"></div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section id="s-checklist" class="sec">
+      <div class="sec-head">
+        <h2 class="sec-title">Checklist Order</h2>
+        <span class="chip" id="cl-lbl">0 / 0</span>
+      </div>
+      <div class="prog-bar-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="cl-prog" style="width:0%"></div></div>
+      </div>
+      <div id="cl-c"></div>
+    </section>
+
+    <!-- HISTORI -->
+    <section id="s-histori" class="sec">
+      <div class="sec-head">
+        <h2 class="sec-title">Histori Tersimpan</h2>
+        <button class="chip-btn" onclick="dupFirst()">+ Duplikat Minggu Lalu</button>
+      </div>
+      <div id="hist-c"><div class="empty-state">Belum ada histori.</div></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
