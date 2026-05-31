@@ -7,7 +7,7 @@
 <title>Order Kebonsari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -34,47 +34,32 @@
   </header>
 
   <nav class="nav-tabs" role="tablist">
-    <button class="ntab active" onclick="go('input')"    role="tab" aria-selected="true">
-      <span class="ntab-icon">✎</span><span>Input</span>
-    </button>
-    <button class="ntab" onclick="go('rekap')"     role="tab">
-      <span class="ntab-icon">⊞</span><span>Rekap</span>
-    </button>
-    <button class="ntab" onclick="go('order-h')"   role="tab">
-      <span class="ntab-icon">✉</span><span>Pesan</span>
-    </button>
-    <button class="ntab" onclick="go('checklist')" role="tab">
-      <span class="ntab-icon">◎</span><span>Checklist</span>
-      <span class="ntab-badge" id="badge-cl"></span>
-    </button>
-    <button class="ntab" onclick="go('histori')"   role="tab">
-      <span class="ntab-icon">⏱</span><span>Histori</span>
-    </button>
+    <button class="ntab active" onclick="go('input')"    role="tab" aria-selected="true"><span class="ntab-icon">✎</span><span>Input</span></button>
+    <button class="ntab" onclick="go('rekap')"           role="tab"><span class="ntab-icon">⊞</span><span>Rekap</span></button>
+    <button class="ntab" onclick="go('order-h')"         role="tab"><span class="ntab-icon">✉</span><span>Pesan</span></button>
+    <button class="ntab" onclick="go('checklist')"       role="tab"><span class="ntab-icon">◎</span><span>Checklist</span><span class="ntab-badge" id="badge-cl"></span></button>
+    <button class="ntab" onclick="go('histori')"         role="tab"><span class="ntab-icon">⏱</span><span>Histori</span></button>
+    <button class="ntab" onclick="go('settings')"        role="tab"><span class="ntab-icon">⚙</span><span>Tema</span></button>
   </nav>
 
   <main class="content">
 
     <!-- INPUT -->
     <section id="s-input" class="sec active">
-      <!-- Import bar -->
       <div class="import-bar">
         <div class="import-info">
           <span class="import-icon">↑</span>
           <div>
             <div class="import-title">Import dari Excel</div>
-            <div class="import-sub">Upload file .xlsx — data otomatis masuk</div>
+            <div class="import-sub">Upload .xlsx minggu baru — otomatis terbaca</div>
           </div>
         </div>
         <button class="import-btn" onclick="triggerImport()">Pilih File</button>
         <input type="file" id="xl-input" accept=".xlsx,.xls" style="display:none" onchange="handleImport(event)">
       </div>
-
       <div id="days-c"></div>
-
       <div class="bottom-actions">
-        <button class="action-btn success" id="btn-sv" onclick="saveW()">
-          <span>◈</span> Simpan ke Histori
-        </button>
+        <button class="action-btn success" id="btn-sv" onclick="saveW()"><span>◈</span> Simpan ke Histori</button>
       </div>
     </section>
 
@@ -85,16 +70,12 @@
         <span class="chip" id="rekap-c">—</span>
       </div>
       <div class="table-wrap">
-        <table class="rtable" id="rtable">
-          <thead>
-            <tr>
-              <th class="th-chk"></th>
-              <th class="th-bahan">Bahan</th>
-              <th>Sat.</th>
-              <th id="rh0"></th><th id="rh1"></th><th id="rh2"></th><th id="rh3"></th>
-              <th class="th-total">Total</th>
-            </tr>
-          </thead>
+        <table class="rtable">
+          <thead><tr>
+            <th class="th-chk"></th><th class="th-bahan">Bahan</th><th>Sat.</th>
+            <th id="rh0"></th><th id="rh1"></th><th id="rh2"></th><th id="rh3"></th>
+            <th class="th-total">Total</th>
+          </tr></thead>
           <tbody id="rekap-tb"></tbody>
         </table>
       </div>
@@ -130,12 +111,15 @@
       <div id="hist-c"><div class="empty-state">Belum ada histori.</div></div>
     </section>
 
+    <!-- SETTINGS / TEMA -->
+    <section id="s-settings" class="sec">
+      <div id="settings-c"></div>
+    </section>
+
   </main>
 </div>
 
 <div class="toast" id="toast"></div>
-
-<!-- SheetJS untuk baca Excel -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="app.js"></script>
 </body>
