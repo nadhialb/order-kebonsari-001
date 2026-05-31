@@ -237,3 +237,27 @@ select{cursor:pointer}
   height:28px; outline:none; cursor:pointer;
 }
 .stok-row select:focus { border-color:var(--accent); }
+
+/* ── LOADING BAR ── */
+#loading-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;transition:width .4s ease;z-index:9999}
+
+/* ── KET WRAP ── */
+.ket-wrap{display:flex;flex-direction:column;gap:3px}
+.inp-ket-sel{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:3px 6px;font-size:11px;font-family:'Outfit',sans-serif;height:28px;width:100%;outline:none;cursor:pointer}
+.inp-ket-sel:focus{border-color:var(--accent)}
+.inp-ket-custom{font-size:11px;padding:4px 7px;height:26px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text);width:100%;outline:none;margin-top:2px}
+.inp-ket-custom:focus{border-color:var(--accent)}
+.ket-badge{font-size:10px;padding:1px 7px;border-radius:8px;background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);white-space:nowrap}
+
+/* ── STOK SISA ── */
+.stok-header-row{display:grid;grid-template-columns:1fr 55px 80px 80px 28px;gap:4px;margin-bottom:4px}
+.stok-header-row span{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;padding:0 2px}
+.stok-row{display:grid;grid-template-columns:1fr 55px 80px 80px 28px;gap:4px;align-items:center;margin-bottom:5px}
+
+/* ── SUMBER LIST ── */
+.sumber-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.sumber-row .inp-bahan{flex:1}
+
+/* ── ROW LABEL & ITEM (override untuk 8 kolom) ── */
+.row-lbl{display:grid;grid-template-columns:26px 1fr 62px 50px 80px 80px 1fr 28px;gap:4px;margin-bottom:3px}
+.item-row{display:grid;grid-template-columns:26px 1fr 62px 50px 80px 80px 1fr 28px;gap:4px;align-items:start;margin-bottom:2px}
