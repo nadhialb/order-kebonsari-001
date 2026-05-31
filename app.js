@@ -431,7 +431,9 @@ function renderOrderH(){
       bHtml+=`<div class="msg-cat"><div class="msg-cat-lbl">${cfg.e} ${cfg.l}</div>`;
       items.forEach(item=>{
         const ck=item.ids.every(id=>CK[id]);
-        const line=`- ${item.b}${item.q?` ${item.q.toLocaleString()} ${item.s||'`:`'}`;
+        const line = item.q
+          ? `- ${item.b} ${item.q.toLocaleString()} ${item.s||''}`
+          : `- ${item.b}`;
         lines.push(line);
         const idsStr=JSON.stringify(item.ids).replace(/"/g,"'");
         bHtml+=`<div class="msg-row ${ck?'ck':''}" onclick="toggleGroup(${idsStr})">
