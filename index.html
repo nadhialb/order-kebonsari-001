@@ -34,10 +34,11 @@
   </header>
 
   <nav class="nav-tabs" role="tablist">
-    <button class="ntab active" onclick="go('input')"    role="tab" aria-selected="true"><span class="ntab-icon">✎</span><span>Input</span></button>
+    <button class="ntab active" onclick="go('input')"    role="tab"><span class="ntab-icon">✎</span><span>Input</span></button>
     <button class="ntab" onclick="go('rekap')"           role="tab"><span class="ntab-icon">⊞</span><span>Rekap</span></button>
     <button class="ntab" onclick="go('order-h')"         role="tab"><span class="ntab-icon">✉</span><span>Pesan</span></button>
     <button class="ntab" onclick="go('checklist')"       role="tab"><span class="ntab-icon">◎</span><span>Checklist</span><span class="ntab-badge" id="badge-cl"></span></button>
+    <button class="ntab" onclick="go('stok')"            role="tab"><span class="ntab-icon">📦</span><span>Stok</span></button>
     <button class="ntab" onclick="go('histori')"         role="tab"><span class="ntab-icon">⏱</span><span>Histori</span></button>
     <button class="ntab" onclick="go('settings')"        role="tab"><span class="ntab-icon">⚙</span><span>Tema</span></button>
   </nav>
@@ -51,7 +52,7 @@
           <span class="import-icon">↑</span>
           <div>
             <div class="import-title">Import dari Excel</div>
-            <div class="import-sub">Upload .xlsx minggu baru — otomatis terbaca</div>
+            <div class="import-sub">Upload .xlsx — bahan, qty, satuan & harga terbaca otomatis</div>
           </div>
         </div>
         <button class="import-btn" onclick="triggerImport()">Pilih File</button>
@@ -102,6 +103,15 @@
       <div id="cl-c"></div>
     </section>
 
+    <!-- STOK SISA -->
+    <section id="s-stok" class="sec">
+      <div class="sec-head">
+        <h2 class="sec-title">Stok Sisa</h2>
+        <span class="hint-text">Bahan dari stok dapur / koperasi</span>
+      </div>
+      <div id="stok-c"></div>
+    </section>
+
     <!-- HISTORI -->
     <section id="s-histori" class="sec">
       <div class="sec-head">
@@ -111,7 +121,7 @@
       <div id="hist-c"><div class="empty-state">Belum ada histori.</div></div>
     </section>
 
-    <!-- SETTINGS / TEMA -->
+    <!-- SETTINGS -->
     <section id="s-settings" class="sec">
       <div id="settings-c"></div>
     </section>
