@@ -419,7 +419,8 @@ function rItems(di){
         onblur="upItNum(${di},${ii},'q',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
       <input type="text" class="inp-sat" value="${escH(item.s||'')}" placeholder="kg"
         oninput="upIt(${di},${ii},'s',this.value)">
-      <input type="text" class="inp-num inp-harga" value="${item.h?fNum(item.h):''}" placeholder="0"
+      <input type="text" class="inp-num" value="${item.h?fNum(item.h):''}" placeholder="${!item.h&&!item.hb?'⚠ isi harga':'harga'}"
+        title="Harga dari Excel / input manual"
         onblur="upItNum(${di},${ii},'h',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
       <input type="text" class="inp-num inp-hbaru ${item.hb?'changed':''}" value="${item.hb?fNum(item.hb):''}" placeholder="—"
         onblur="upItNum(${di},${ii},'hb',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
