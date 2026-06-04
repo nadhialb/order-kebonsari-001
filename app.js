@@ -48,7 +48,7 @@ const BUMBU_KW=['bawang','garam','gula','merica','lada','cabe','cabai','rawit',
   'siracha','keju','krim','santan','coconut','evaporasi','madu','sirup','cuka',
   'vanili','vanilla','baking','soda kue','ragi','yeast','pengembang','pewarna',
   'essence','pasta','paprika','oregano','thyme','rosemary','kulit pangsit',
-  'saffron','kecap manis dara','air jeruk','jeruk nipis'];
+  'saffron','kecap manis dara','air jeruk','jeruk nipis','bombay'];
 
 const SAYUR_KW=['sawi','wortel','kubis','kol','selada','bayam','kangkung',
   'buncis','terong','jagung','timun','mentimun','labu siam','pare','brokoli',
@@ -107,9 +107,19 @@ function toTitle(s){if(!s)return '';return s.trim().replace(/\w\S*/g,w=>w.charAt
 // Format tanggal konsisten: "Senin, 08 Juni 2026"
 function fmtTgl(str){
   if(!str) return str;
-  // Sudah dalam format yang benar?
-  if(/^(Senin|Selasa|Rabu|Kamis|Jum'at|Sabtu|Ahad),\s\d{2}\s\w+\s\d{4}$/.test(str)) return str;
-  // Parse berbagai format
+  // Sudah format benar: "Senin, 08 Juni 2026"
+  const okPattern=/^(Senin|Selasa|Rabu|Kamis|Jum'at|Sabtu|Ahad),\s(\d{2})\s(\w+)\s(\d{4})$/;
+  if(okPattern.test(str)) return str;
+  // Ada nama hari tapi tanggal 1 digit: "Senin, 8 Juni 2026"
+  const withHari=/^(Senin|Selasa|Rabu|Kamis|Jum'at|Sabtu|Ahad),\s(\d{1,2})\s(\w+)\s(\d{4})$/;
+  const wm=str.match(withHari);
+  if(wm){
+    const dd=String(parseInt(wm[2])).padStart(2,'0');
+    const bIdx=BULAN.findIndex(b=>b.toLowerCase()===wm[3].toLowerCase());
+    const bulanNm=bIdx>=0?BULAN[bIdx]:wm[3];
+    return `${wm[1]}, ${dd} ${bulanNm} ${wm[4]}`;
+  }
+  // Tanpa nama hari: "8 Juni 2026" atau "08 Juni 2026"
   const m=str.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/);
   if(!m) return str;
   const dd=String(parseInt(m[1])).padStart(2,'0');
@@ -452,47 +462,70 @@ function rItems(di){
     const cat=gc(item.b),cfg=CC[cat];
     const hargaAktif=item.hb||item.h;
     const total=(item.q&&hargaAktif)?item.q*hargaAktif:null;
-    const isCustom=item.ket&&!SUMBER.includes(item.ket);
+    const isCustomKet=item.ket&&!SUMBER.includes(item.ket);
     const hMissing=!item.h&&!item.hb;
     const isCustomKat=CUSTOM_KAT[item.b.toLowerCase().trim()];
 
+    // Field templates (dipakai di desktop & mobile)
+    const fBahan=`<input type="text" class="inp-bahan" value="${escH(item.b)}" placeholder="Nama bahan"
+      onblur="upItBlur(${di},${ii},'b',this.value)" oninput="upIt(${di},${ii},'b',this.value)">`;
+    const fQty=`<input type="text" class="inp-num" value="${item.q?fNum(item.q):''}" placeholder="Qty"
+      onblur="upItNum(${di},${ii},'q',this.value)" onfocus="this.value=this.value.replace(/[.]/g,'')">`;
+    const fSat=`<input type="text" class="inp-sat" value="${escH(normSat(item.s||''))}" placeholder="kg"
+      oninput="upIt(${di},${ii},'s',this.value)">`;
+    const fH=`<input type="text" class="inp-num${hMissing?' harga-missing':''}" value="${item.h?fNum(item.h):''}"
+      placeholder="${hMissing?'⚠ harga':'harga'}"
+      onblur="upItNum(${di},${ii},'h',this.value)" onfocus="this.value=this.value.replace(/[.]/g,'')">`;
+    const fHB=`<input type="text" class="inp-num inp-hbaru${item.hb?' changed':''}" value="${item.hb?fNum(item.hb):''}"
+      placeholder="ubah harga"
+      onblur="upItNum(${di},${ii},'hb',this.value)" onfocus="this.value=this.value.replace(/[.]/g,'')">`;
+    const fKet=`<div class="ket-wrap" id="ketwrap-${di}-${ii}">
+      <select class="inp-ket-sel" onchange="ketChange(${di},${ii},this.value)">
+        <option value="">— sumber —</option>${sumberOptions(isCustomKet?'__lain__':item.ket)}
+      </select>
+      ${isCustomKet
+        ?`<input type="text" class="inp-ket-custom" value="${escH(item.ket)}" placeholder="nama dapur..." oninput="upIt(${di},${ii},'ket',this.value)" onblur="saveLocal()">`
+        :`<input type="text" class="inp-ket-custom" style="display:none" placeholder="nama dapur..." oninput="upIt(${di},${ii},'ket',this.value)">`}
+      </div>`;
+    const fChk=`<div class="chk ${ck?'on':''}" onclick="toggle(${di},${ii})" title="Tandai diorder">${ck?'✓':''}</div>`;
+    const fDel=`<button class="btn-x" onclick="rmIt(${di},${ii})" title="Hapus">✕</button>`;
+
     const row=document.createElement('div');
-    row.className='item-row'+(ck?' is-ck':'');
-    row.innerHTML=`
-      <div class="chk ${ck?'on':''}" onclick="toggle(${di},${ii})" title="Tandai diorder">${ck?'✓':''}</div>
-      <input type="text" class="inp-bahan" value="${escH(item.b)}" placeholder="Nama bahan"
-        onblur="upItBlur(${di},${ii},'b',this.value)" oninput="upIt(${di},${ii},'b',this.value)">
-      <input type="text" class="inp-num" value="${item.q?fNum(item.q):''}" placeholder="Qty"
-        onblur="upItNum(${di},${ii},'q',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
-      <input type="text" class="inp-sat" value="${escH(normSat(item.s||''))}" placeholder="kg"
-        oninput="upIt(${di},${ii},'s',this.value)">
-      <input type="text" class="inp-num ${hMissing?'harga-missing':''}" value="${item.h?fNum(item.h):''}"
-        placeholder="${hMissing?'⚠ harga':'harga'}"
-        onblur="upItNum(${di},${ii},'h',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
-      <input type="text" class="inp-num inp-hbaru${item.hb?' changed':''}" value="${item.hb?fNum(item.hb):''}"
-        placeholder="ubah harga"
-        onblur="upItNum(${di},${ii},'hb',this.value)" onfocus="this.value=this.value.replace(/\\./g,'')">
-      <div class="ket-wrap" id="ketwrap-${di}-${ii}">
-        <select class="inp-ket-sel" onchange="ketChange(${di},${ii},this.value)">
-          <option value="">— sumber —</option>${sumberOptions(isCustom?'__lain__':item.ket)}
-        </select>
-        ${isCustom
-          ?`<input type="text" class="inp-ket-custom" value="${escH(item.ket)}" placeholder="nama dapur..." oninput="upIt(${di},${ii},'ket',this.value)" onblur="saveLocal()">`
-          :`<input type="text" class="inp-ket-custom" style="display:none" placeholder="nama dapur..." oninput="upIt(${di},${ii},'ket',this.value)">`}
-      </div>
-      <button class="btn-x" onclick="rmIt(${di},${ii})" title="Hapus">✕</button>`;
+
+    if(window.innerWidth<=580){
+      // MOBILE: kartu vertikal, semua field muncul
+      row.className='item-row item-card'+(ck?' is-ck':'');
+      row.innerHTML=`
+        <div class="card-row1">${fChk}${fBahan}${fDel}</div>
+        <div class="card-row2">
+          <div class="card-half">
+            <div class="card-lbl">Jumlah & Satuan</div>
+            <div class="card-inline">${fQty}${fSat}</div>
+          </div>
+          <div class="card-half">
+            <div class="card-lbl">Harga / H.Baru</div>
+            <div class="card-inline">${fH}${fHB}</div>
+          </div>
+        </div>
+        <div class="card-row3">
+          <div class="card-lbl">Sumber</div>
+          ${fKet}
+        </div>`;
+    } else {
+      // DESKTOP: grid 8 kolom
+      row.className='item-row'+(ck?' is-ck':'');
+      row.innerHTML=`${fChk}${fBahan}${fQty}${fSat}${fH}${fHB}${fKet}${fDel}`;
+    }
     c.appendChild(row);
 
-    // Subtotal + kategori badge + tombol ubah kategori
+    // Subtotal + kat badge
     const sub=document.createElement('div');
     sub.className='item-subtotal'+(ck?' is-ck':'');
     sub.innerHTML=`
       <div class="kat-wrap-inline" style="position:relative">
-        <button class="kat-badge-btn ${isCustomKat?'custom':''}" id="kat-btn-${di}-${ii}"
+        <button class="kat-badge-btn${isCustomKat?' custom':''}" id="kat-btn-${di}-${ii}"
           onclick="showKatPicker(${di},${ii},'${escH(item.b)}')"
-          title="Klik untuk ubah kategori">
-          ${cfg.e} ${cfg.l}${isCustomKat?' ✏️':''}
-        </button>
+          title="Klik untuk ubah kategori">${cfg.e} ${cfg.l}${isCustomKat?' ✏️':''}</button>
       </div>
       ${total?`<span class="subtotal-val">= Rp ${fNum(total)}</span>`:''}
       ${item.hb?'<span class="hbaru-badge">harga diubah</span>':''}
@@ -500,7 +533,6 @@ function rItems(di){
     c.appendChild(sub);
   });
 }
-
 function ketChange(di,ii,val){
   if(val==='__lain__'){
     WD.days[di].items[ii].ket='';saveLocal();rItems(di);
@@ -523,11 +555,25 @@ async function saveW(){
 
 // ─── REKAP ───────────────────────────────────────────────────
 function renderRekap(){
-  // Header kolom: hari + tanggal lengkap
-  WD.days.forEach((d,i)=>{
-    const el=document.getElementById(`rh${i}`);
-    if(el){el.textContent=shortDay(d.n);el.style.whiteSpace='pre';}
-  });
+  // Header kolom dinamis sesuai jumlah hari aktual
+  const nDays=WD.days.length;
+  // Pastikan ada cukup kolom th di tabel
+  const thead=document.querySelector('#rtable thead tr');
+  if(thead){
+    // Hapus kolom hari lama (kolom 3 s/d sebelum Total)
+    const allTh=Array.from(thead.querySelectorAll('th'));
+    // Kolom: chk(0), Bahan(1), Sat(2), ...hari..., Total(last)
+    // Hapus th dengan id rh*
+    thead.querySelectorAll('th[id^="rh"]').forEach(th=>th.remove());
+    // Tambah kolom sesuai hari aktual
+    const totalTh=thead.querySelector('.th-total');
+    WD.days.forEach((d,i)=>{
+      const th=document.createElement('th');
+      th.id=`rh${i}`;th.style.minWidth='62px';th.style.whiteSpace='pre';
+      th.textContent=shortDay(d.n);
+      thead.insertBefore(th,totalTh);
+    });
+  }
   const map={};
   WD.days.forEach((day,di)=>day.items.forEach((item,ii)=>{
     if(!item.b)return;
@@ -539,11 +585,11 @@ function renderRekap(){
   const multi=Object.values(map).filter(v=>Object.keys(v.pd).length>=2);
   document.getElementById('rekap-c').textContent=`${multi.length} bahan`;
   const tb=document.getElementById('rekap-tb');tb.innerHTML='';
-  if(!multi.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text3)">Tidak ada bahan yang dipakai lebih dari 1 hari.</td></tr>`;return;}
+  if(!multi.length){tb.innerHTML=`<tr><td colspan="${3+WD.days.length}" style="text-align:center;padding:2rem;color:var(--text3)">Tidak ada bahan yang dipakai lebih dari 1 hari.</td></tr>`;return;}
   multi.sort((a,b)=>CO.indexOf(a.cat)-CO.indexOf(b.cat)||a.d.localeCompare(b.d));
   let curC=null;
   multi.forEach(item=>{
-    if(item.cat!==curC){curC=item.cat;const cfg=CC[curC];const tr=document.createElement('tr');tr.className='cat-row';tr.innerHTML=`<td colspan="8">${cfg.e} ${cfg.l}</td>`;tb.appendChild(tr);}
+    if(item.cat!==curC){curC=item.cat;const cfg=CC[curC];const tr=document.createElement('tr');tr.className='cat-row';tr.innerHTML=`<td colspan="${3+WD.days.length}">${cfg.e} ${cfg.l}</td>`;tb.appendChild(tr);}
     const allCk=item.ids.every(id=>CK[id]);
     const tr=document.createElement('tr');if(allCk)tr.className='ck-row';
     let tot=0;
