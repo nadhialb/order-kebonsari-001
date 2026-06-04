@@ -237,3 +237,47 @@ input::placeholder{color:var(--text3)}
   .logo-sub{max-width:150px}
   .import-sub{display:none}
 }
+
+/* ── KATEGORI BADGE BUTTON ── */
+.kat-badge-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
+.kat-badge-btn:hover{border-color:var(--accent);color:var(--accent)}
+.kat-badge-btn.custom{border-color:rgba(251,191,36,.4);color:var(--yellow)}
+
+/* ── KATEGORI PICKER POPUP ── */
+.kat-picker-popup{position:absolute;left:0;top:28px;z-index:200;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:.75rem;box-shadow:0 8px 24px rgba(0,0,0,.4);min-width:220px}
+.kat-picker-title{font-size:11px;color:var(--text2);margin-bottom:.65rem;line-height:1.4}
+.kat-picker-title strong{color:var(--text);display:block;margin-top:2px}
+.kat-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:.5rem}
+.kat-opt{padding:5px 8px;border-radius:7px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:11px;font-family:'Outfit',sans-serif;text-align:left;transition:all .15s;white-space:nowrap}
+.kat-opt:hover{border-color:var(--accent);color:var(--accent);background:rgba(79,142,247,.08)}
+.kat-picker-save-all{width:100%;padding:4px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif}
+.kat-picker-save-all:hover{color:var(--red)}
+
+/* ── CUSTOM KAT LIST ── */
+.custom-kat-row{display:flex;align-items:center;gap:8px;padding:.5rem .6rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.4rem}
+.custom-kat-name{flex:1;font-size:12px;font-weight:500}
+.custom-kat-badge{font-size:11px;padding:2px 8px;border-radius:9px;background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(251,191,36,.3);white-space:nowrap}
+
+/* ── CHECKED MARK DI PESAN ORDER ── */
+.ck-mark{margin-left:auto;color:var(--green);font-size:12px;flex-shrink:0}
+
+/* ── MOBILE PORTRAIT — INPUT ── */
+@media(max-width:540px){
+  .row-lbl{display:none}
+  .item-row{
+    display:block;
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:var(--radius);padding:8px;margin-bottom:8px;
+  }
+  .item-row .inp-bahan{width:100%;margin-bottom:5px}
+  .item-row-line2{display:grid;grid-template-columns:1fr 70px 80px 80px;gap:4px;margin-bottom:5px;align-items:center}
+  .item-row-line3{display:grid;grid-template-columns:1fr 26px;gap:4px;align-items:start}
+  /* Desktop cols hidden on mobile */
+  .item-row > .chk,
+  .item-row > .inp-num,
+  .item-row > .inp-sat,
+  .item-row > input[class*="inp-harga"],
+  .item-row > .inp-hbaru,
+  .item-row > .ket-wrap,
+  .item-row > .btn-x{display:none}
+}
